@@ -3,6 +3,5 @@ import react from '@vitejs/plugin-react-swc'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  base:'https://Chvrry1.github.io/PathFinder/'
+  plugins: [react()]
 })
