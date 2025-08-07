@@ -141,8 +141,10 @@ function Game({ show }) {
     if (challenge && pathParts.length > 0) {
       const currentPath = pathParts.join('');
       const correctPath = calculateCorrectPath(challenge.startFile, challenge.endFile);
+
+      const absolutePath = challenge.endFile.path.replace(/^.*?(\/)/, '/');
       
-      if (currentPath === correctPath) {
+      if ([correctPath, absolutePath].includes(currentPath)) {
         setGameStatus('success');
       }
     }
@@ -211,7 +213,7 @@ function Game({ show }) {
           {introStep >= 2 && (
             <div className={`floating-instruction ${hideInstructions ? 'fade-out' : ''}`}>
               <h3>🌳 ¡Bienvenido a PathFinder!</h3>
-              <p>Este es tu sistema de archivos. Aquí puedes ver la estructura completa de carpetas y archivos. Tu misión será construir rutas relativas entre diferentes archivos.</p>
+              <p>Este es tu sistema de archivos. Aquí puedes ver la estructura completa de carpetas y archivos. Tu misión será construir rutas entre diferentes archivos.</p>
             </div>
           )}
         </div>
@@ -939,8 +941,12 @@ function calculateCorrectPath(startFile, endFile) {
   let path = '';
   
   // Agregar ../ para cada nivel que necesitamos subir
-  for (let i = 0; i < levelsUp; i++) {
-    path += '../';
+  if (levelsUp === 0) {
+    path = './'; // mismo nivel => empieza con ./
+  } else {
+    for (let i = 0; i < levelsUp; i++) {
+      path += '../';
+    }
   }
   
   // Agregar la ruta hacia el archivo destino
